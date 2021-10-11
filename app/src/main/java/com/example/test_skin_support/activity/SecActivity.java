@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
+import com.example.skinlibrary.SkinBaseActivity;
 import com.example.test_skin_support.R;
 
-public class SecActivity extends BaseActivity {
+public class SecActivity extends SkinBaseActivity {
     TextView tv;
     @SuppressLint("ResourceAsColor")
     @Override
@@ -19,8 +21,10 @@ public class SecActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sec);
         tv = findViewById(R.id.tv);
-//        tv.setTextColor(R.color.colorAccent);
     }
 
 
+    public void onClick(View view) {
+        finish();
+    }
 }

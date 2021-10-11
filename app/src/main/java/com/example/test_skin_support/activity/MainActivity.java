@@ -1,7 +1,9 @@
 package com.example.test_skin_support.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -19,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.skinlibrary.SkinBaseActivity;
 import com.example.test_skin_support.R;
@@ -43,6 +48,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
     Button btn_default;
     Button btn_change;
     Button btn_jump;
+    Button btn_finish;
     TextView tv;
     ImageView img;
     ImageView imageView;
@@ -62,6 +68,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
         btn_change = findViewById(R.id.btn_change);
         btn_default = findViewById(R.id.btn_default);
         btn_jump = findViewById(R.id.btn_jump);
+        btn_finish = findViewById(R.id.btn_finish);
         tv = findViewById(R.id.tv);
         img = findViewById(R.id.img);
         layout = findViewById(R.id.layout);
@@ -86,6 +93,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
         btn_change.setOnClickListener(this);
         btn_default.setOnClickListener(this);
         btn_jump.setOnClickListener(this);
+        btn_finish.setOnClickListener(this);
 
 //        tv.setTextAppearance(R.style.myTextStyle);
 //        tv.setTextColor(SkinCompatResources.getColor(this,R.color.colorBg));
@@ -93,9 +101,6 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
 //        tv.setBackgroundColor(SkinCompatResources.getInstance().getColor(this,R.color.colorAccent));
         tv.setBackgroundResource(R.color.colorAccent);
 //        tv.setBackgroundColor(getColor(R.color.colorAccent));
-        textHelper = SkinCompatTextHelper.create(tv);
-        mDropDownBackgroundResId = SkinCompatTextHelper.checkResourceId(R.color.colorAccent);
-        textHelper.applySkin();
 
         layout.setBackgroundResource(R.color.colorBg);
 
@@ -168,18 +173,35 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
 
                 ContentValues contentValues1 = new ContentValues();
                 contentValues1.put("skin","");
-                getContentResolver().update(Uri.parse("content://"+ThemeProvider.Uri),contentValues1,null,null);
+                getContentResolver().update(Uri.parse("content://"+ ThemeProvider.Uri),contentValues1,null,null);
                 break;
             case R.id.btn_jump:
-//                Intent intent = new Intent(this,SecActivity.class);
-//                startActivity(intent);
-                finish();
+                Intent intent = new Intent(this,SecActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_finish:
+                showDialog();
                 break;
         }
 //        Toast.makeText(this, "点击切换", Toast.LENGTH_SHORT).show();
 //        Log.e(TAG,"保存："+getSharedPreferences("skin",MODE_PRIVATE).getString("skin",""));
     }
 
+
+    private void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("标题")
+                .setMessage("确定结束？")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("否", null)
+                .setNeutralButton("取消", null)
+                .show();
+    }
 
 
     @Override

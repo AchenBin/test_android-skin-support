@@ -34,7 +34,8 @@ public class SkinApp extends Application {
                 .addInflater(new SkinCardViewInflater())                // CardView v7 控件换肤初始化[可选]
                 .setSkinStatusBarColorEnable(false)                     // 关闭状态栏换肤，默认打开[可选]
                 .setSkinWindowBackgroundEnable(false)                   // 关闭windowBackground换肤，默认打开[可选]
-                .loadSkin();
+//                .loadSkin();  //不使用默认初始化加载，容易造成不一致时的闪屏切换
+        ;
         //无关
 //        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);    //Android5.0以下矢量图片兼容
 
@@ -62,9 +63,10 @@ public class SkinApp extends Application {
                 Cursor cursor = getContentResolver().query(uri,null,null,null,null);
                 while(cursor.moveToNext()){
                     String skinName = cursor.getString(0);
-                    if(skinName.equals(SkinPreference.getInstance().getSkinName())){
-                        Log.i(TAG,getPackageName()+"当前已是"+skinName+"主题，无需改变");
-                    }else if(skinName.equals("")){
+//                    if(skinName.equals(SkinPreference.getInstance().getSkinName())){  //如果一开始没有loadSkin，那么是不能进行这个判断的。因为虽然已保存，但还未初始化切换好
+//                        Log.i(TAG,getPackageName()+"当前已是"+skinName+"主题，无需改变");
+//                    }else
+                    if(skinName.equals("")){
                         Log.i(TAG,getPackageName()+"准备切换默认主题："+skinName);
                         SkinCompatManager.getInstance().restoreDefaultTheme();
                     }else{

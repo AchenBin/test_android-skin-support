@@ -79,7 +79,7 @@ public class ThemeProvider extends ContentProvider {
         SharedPreferences.Editor editor = skinPreference.edit();
         editor.putString("skin",skinName).commit();
         Log.i(TAG,"更新保存皮肤："+skinName);
-        getContext().getContentResolver().notifyChange(uri,null);
+        getContext().getContentResolver().notifyChange(uri,null);   //通知相关监听，内容改变
         return 0;
     }
 
