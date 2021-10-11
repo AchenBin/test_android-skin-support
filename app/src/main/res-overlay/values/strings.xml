@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name_overlay">test_skin-support:overlay2</string>
+    <string name="title_main_overlay">overlay2主题</string>
+</resources>
