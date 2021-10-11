@@ -36,7 +36,7 @@ import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
 import skin.support.widget.SkinCompatTextHelper;
-
+//个人github token: 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
 public class MainActivity extends SkinBaseActivity implements View.OnClickListener , CompoundButton.OnCheckedChangeListener,SkinCompatSupportable{
     public static final String TAG = "换肤";
     LinearLayout layout;
