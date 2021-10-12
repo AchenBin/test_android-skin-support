@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.skinlibrary.CustomSDCardLoader;
 import com.example.skinlibrary.SkinBaseActivity;
 import com.example.test_skin_support.R;
 
@@ -130,26 +131,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
         Log.e(TAG,"点击按钮");
         switch (view.getId()){
             case R.id.btn_change:
-//                SkinCompatManager.getInstance().loadSkin("overlay2.skin", new SkinCompatManager.SkinLoaderListener() {
-//                    @Override
-//                    public void onStart() {
-//                        Log.e("换肤","开始");
-//                    }
-//
-//                    @Override
-//                    public void onSuccess() {
-//                        Log.e(TAG,"成功"+ SkinCompatResources.getInstance().getSkinPkgName());
-//                        Log.e(TAG,"成功"+ SkinCompatManager.getInstance().getCurSkinName());
-//                        Log.e(TAG,"成功"+ SkinPreference.getInstance().getSkinName());
-//                    }
-//
-//                    @Override
-//                    public void onFailed(String errMsg) {
-//                        Log.e(TAG,"失败"+errMsg);
-//
-//                    }
-//                }
-//                ,SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS);
+                SkinCompatManager.getInstance().loadSkin("overlay2.skin",null, CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD);
 
 
 //                //存主题值
@@ -212,12 +194,14 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
 
     @Override
     public void applySkin() {
+        super.applySkin();
 //        Log.i(TAG,getPackageName()+"：applySkin，包名："+SkinCompatResources.getInstance().getSkinPkgName());
         if(tv != null){
 //            tv.setTextColor(SkinCompatResources.getColor(this,R.color.colorBg));
 //            tv.setTextColor(getResources().getColor(R.color.colorPrimary,null));
 //            tv.setBackgroundColor(SkinCompatResources.getColor(this,R.color.colorAccent));
         }
+        //位置不会保存
 //        if(img != null){
 //            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img.getLayoutParams();
 //            layoutParams.leftMargin += 40;
@@ -225,12 +209,19 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
 //            layoutParams.weight += 20;
 //            img.setLayoutParams(layoutParams);
 //        }
+        //模拟其他模块改变主题，响应界面改变但不调用onCheckedChanged
+        if(radio_default != null && SkinPreference.getInstance().getSkinName().equals("")){
+            isNeedListener = false;
+            radio_default.setChecked(true);
+            isNeedListener = true;
+        }
     }
+    private boolean isNeedListener = true;  //标记是否需要调用onCheckedChanged，用于其他模块改变主题后，radioButton响应
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         ContentValues contentValues = new ContentValues();
-        if(b){
+        if(b && isNeedListener){
             switch (compoundButton.getId()){
                 case R.id.radio_change3:
                     contentValues.put("skin","overlay3.skin");
