@@ -19,6 +19,7 @@ import skin.support.content.res.SkinCompatThemeUtils;
 import skin.support.content.res.SkinCompatVectorResources;
 import skin.support.observe.SkinObservable;
 import skin.support.observe.SkinObserver;
+import skin.support.utils.SkinPreference;
 import skin.support.widget.SkinCompatSupportable;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
@@ -29,6 +30,38 @@ public class SkinBaseActivity extends AppCompatActivity implements SkinCompatSup
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        skinApp = (SkinApp)getApplication();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG,getPackageName()+":onStart");
+        if(skinApp.needUpdateOnResume){
+            skinApp.needUpdateOnResume = false;
+            Log.i(TAG,getPackageName()+"：onResume需要更新主题！");
+            SkinCompatManager.getInstance().loadSkin(SkinPreference.getInstance().getSkinName(),SkinPreference.getInstance().getSkinStrategy());
+        }
+    }
+
+    SkinApp skinApp;
+    @Override
+    protected void onResume() {
+        Log.e(TAG,getPackageName()+":onResume");
+        super.onResume();
+        skinApp.addActivity(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        skinApp.removeActivity(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        skinApp = null;
     }
 
     @NonNull

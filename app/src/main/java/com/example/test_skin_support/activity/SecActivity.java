@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 //import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ public class SecActivity extends SkinBaseActivity {
 
 
     public void onClick(View view) {
-        finish();
+//        finish();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,15 +1,21 @@
 package com.example.skinlibrary;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import skin.support.SkinCompatManager;
@@ -19,16 +25,38 @@ import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
 import skin.support.utils.SkinPreference;
 
+import static skin.support.SkinCompatManager.SKIN_LOADER_STRATEGY_NONE;
+
 public class SkinApp extends Application {
     public static final String TAG = "换肤App";
     public static final int SKIN_LOADER_STRATEGY = CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD;  //加载策略，自定义sd
 //    public static final int SKIN_LOADER_STRATEGY = SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS;  //加载策略，assets
+
+    private volatile List<Activity> activityList = new ArrayList<>();
+    public volatile boolean needUpdateOnResume = false;
+
+    public synchronized void addActivity(Activity activity){
+        if(!activityList.contains(activity)){
+            activityList.add(activity);
+            Log.i(TAG,getPackageName()+"：addActivity后，数量"+activityList.size());
+        }
+    }
+
+    public synchronized void removeActivity(Activity activity){
+        if(activityList.contains(activity)){
+            activityList.remove(activity);
+            Log.i(TAG,getPackageName()+"：removeActivity后，数量"+activityList.size());
+        }
+    }
 
     Uri uri;
     @Override
     public void onCreate() {
         Log.e(TAG,getPackageName()+"onCreate");
         super.onCreate();
+
+        needUpdateOnResume = false;
+
         SkinCompatManager.withoutActivity(this)
                 .addStrategy(new CustomSDCardLoader())
                 .addInflater(new SkinAppCompatViewInflater())           // 基础控件换肤初始化
@@ -58,58 +86,46 @@ public class SkinApp extends Application {
 
 
     private void changeSkin(final Uri uri) {
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                Log.e(TAG,getPackageName()+"查询");
-                Cursor cursor = getContentResolver().query(uri,null,null,null,null);
-                while(cursor.moveToNext()){
-                    String skinName = cursor.getString(0);
-//                    if(skinName.equals(SkinPreference.getInstance().getSkinName())){  //如果一开始没有loadSkin，那么是不能进行这个判断的。因为虽然已保存，但还未初始化切换好
-//                        Log.i(TAG,getPackageName()+"当前已是"+skinName+"主题，无需改变");
-//                    }else
-                    if(skinName.equals("")){
-                        Log.i(TAG,getPackageName()+"准备切换默认主题："+skinName);
-                        SkinCompatManager.getInstance().restoreDefaultTheme();
-                    }else{
-                        Log.i(TAG,getPackageName()+"准备切换主题："+skinName);
-                        SkinCompatManager.getInstance().loadSkin(skinName,SKIN_LOADER_STRATEGY);
-                    }
-                    break;
-                }
-                cursor.close();
+        Cursor cursor = getContentResolver().query(uri,null,null,null,null);
+        while(cursor.moveToNext()){
+            String skinName = cursor.getString(0);
+            changeSkinByName(skinName);
+//            if(activityList.size()>0){    //在前台
+//                changeSkinByName(skinName);
+//            }else{                              //在后台
+//                delayChangeSkinByName(skinName);
 //            }
-//        }.start();
+            break;
+        }
+        cursor.close();
     }
 
-    public static boolean isBackground(Context context) {
-        ActivityManager activityManager = (ActivityManager) context
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
-                .getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.processName.equals(context.getPackageName())) {
-                /*
-                BACKGROUND=400 EMPTY=500 FOREGROUND=100
-                GONE=1000 PERCEPTIBLE=130 SERVICE=300 ISIBLE=200
-                 */
-                Log.i(context.getPackageName(), "此appimportace ="
-                        + appProcess.importance
-                        + ",context.getClass().getName()="
-                        + context.getClass().getName());
-                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                    Log.i(context.getPackageName(), "处于后台"
-                            + appProcess.processName);
-                    return true;
-                } else {
-                    Log.i(context.getPackageName(), "处于前台"
-                            + appProcess.processName);
-                    return false;
-                }
-            }
+    /**
+     * 直接切换主题
+     * @param skinName
+     */
+    private void changeSkinByName(String skinName){
+        needUpdateOnResume = false;
+        Log.i(TAG,getPackageName()+"准备切换默认主题："+skinName);
+        if(skinName.equals("")){
+            SkinCompatManager.getInstance().restoreDefaultTheme();
+        }else{
+            SkinCompatManager.getInstance().loadSkin(skinName,SKIN_LOADER_STRATEGY);
         }
-        return false;
+    }
+
+    /**
+     * 先保存并设置需要切换flag，等待该模块的activity,OnResume时再切换
+     * @param skinName
+     */
+    private void delayChangeSkinByName(String skinName){
+        needUpdateOnResume = true;
+        Log.i(TAG,getPackageName()+"不在前台，等待resume再切换："+skinName);
+        if(skinName.equals("")){
+            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY_NONE).commitEditor();
+        }else{
+            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY).commitEditor();
+        }
     }
 
     //很大可能不会调用的

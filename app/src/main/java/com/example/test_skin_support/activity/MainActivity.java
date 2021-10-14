@@ -131,7 +131,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
         Log.e(TAG,"点击按钮");
         switch (view.getId()){
             case R.id.btn_change:
-                SkinCompatManager.getInstance().loadSkin("overlay2.skin",null, CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD);
+//                SkinCompatManager.getInstance().loadSkin("overlay2.skin",null, CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD);
 
 
 //                //存主题值
@@ -214,6 +214,7 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
             isNeedListener = false;
             radio_default.setChecked(true);
             isNeedListener = true;
+            Log.e(TAG,"radio_default切换！！！");
         }
     }
     private boolean isNeedListener = true;  //标记是否需要调用onCheckedChanged，用于其他模块改变主题后，radioButton响应
