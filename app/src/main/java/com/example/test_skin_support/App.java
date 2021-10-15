@@ -1,6 +1,7 @@
 package com.example.test_skin_support;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.multidex.MultiDex;
 
 import com.example.skinlibrary.SkinApp;
 
@@ -78,4 +80,11 @@ public class App extends SkinApp {
 //        super.onTerminate();
 //        Log.e(TAG,"application终止");
 //    }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }

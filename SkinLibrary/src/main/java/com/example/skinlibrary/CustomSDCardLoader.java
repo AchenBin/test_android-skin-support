@@ -15,10 +15,10 @@ public class CustomSDCardLoader extends SkinSDCardLoader {
     @Override
     protected String getSkinPath(Context context, String skinName) {
 //        File file = new File(SkinFileUtils.getSkinDir(context), skinName);    //默认:/storage/emulated/0/Android/data/com.XXX.XXX/cache/skins/
-        //将skin放在apk同目录
+        //将skin放在apk上机目录
         File packageDir = new File(context.getPackageResourcePath());
         packageDir = new File(packageDir.getParent());
-        File file = new File(packageDir.getParent(), skinName);
+        File file = new File(packageDir.getParent(), skinName); //去掉getParent()就是在apk同级目录
         String path = file.getAbsolutePath();
         Log.i(TAG,context.getPackageName()+":path = "+path);
         return path;

@@ -41,15 +41,15 @@ public class ThemeProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         skinPreference = getContext().getSharedPreferences("skin", Context.MODE_PRIVATE);
         if(skinPreference == null) {
-            Log.e("换肤","skinPreference == null");
+            Log.e(TAG,"skinPreference == null");
             return null;
         }
         final String skinName = skinPreference.getString("skin","");
         if(skinName == null) {
-            Log.e("换肤", "skinName == null");
+            Log.e(TAG, "skinName == null");
             return null;
         }
-        MatrixCursor cursor = new MatrixCursor(new String[]{"skin"});
+        MatrixCursor cursor = new MatrixCursor(new String[]{"skin"});   //参数类似于列名
         cursor.addRow(new String[]{skinName});
         return (Cursor) cursor;
     }

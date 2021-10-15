@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.example.test_skin_support.R;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
 import skin.support.widget.SkinCompatTextHelper;
 import skin.support.widget.SkinCompatTextView;
@@ -52,7 +53,7 @@ public class MyView extends LinearLayout implements SkinCompatSupportable {
 
     int color;
     float dimension;
-    int id;
+    int id = SkinCompatHelper.INVALID_ID;   //默认无效id
 
     public void init(Context context,AttributeSet attrs){
         this.context = context;
@@ -68,7 +69,7 @@ public class MyView extends LinearLayout implements SkinCompatSupportable {
 //        color = typedArray.getColor(R.styleable.MyView_firstColor,0);
 //        tv.setTextColor(color);
 
-        id = typedArray.getResourceId(R.styleable.MyView_firstColor,0);
+        id = typedArray.getResourceId(R.styleable.MyView_firstColor,SkinCompatHelper.INVALID_ID);
         color = SkinCompatResources.getColor(context,id);
         tv.setTextColor(color);
 
@@ -97,11 +98,12 @@ public class MyView extends LinearLayout implements SkinCompatSupportable {
 
         }
        if(tv != null){
-           color = SkinCompatResources.getColor(context,id);
-           tv.setTextColor(color);
+           id = SkinCompatHelper.checkResourceId(id);  //检验id是否合法，否返回0
+           if(id != SkinCompatHelper.INVALID_ID){
+               color = SkinCompatResources.getColor(context,id);
+               tv.setTextColor(color);
+           }
 //           tv.setTextSize(SkinCompatResources.getInstance().getSkinResources().getDimension(R.dimen.btn_height));
-           tv.applySkin();
-
        }
     }
 }

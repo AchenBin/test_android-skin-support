@@ -1,16 +1,12 @@
 package com.example.module11;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.example.skinlibrary.SkinBaseActivity;
-
-import skin.support.widget.SkinCompatSupportable;
+import com.example.skinlibrary.view.MyTextView;
 
 public class MainActivity extends SkinBaseActivity {
 
@@ -18,6 +14,10 @@ public class MainActivity extends SkinBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MyTextView my_text = findViewById(R.id.my_text);
+        my_text.setTextColorResource(R.color.text_color_tip);
+//        my_text.setBackgroundResource(R.color.colorPrimaryDark);
     }
 
 

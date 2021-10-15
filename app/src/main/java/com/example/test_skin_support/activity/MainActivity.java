@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.skinlibrary.CustomSDCardLoader;
 import com.example.skinlibrary.SkinBaseActivity;
+import com.example.skinlibrary.view.MyTextView;
 import com.example.test_skin_support.R;
 
 import java.text.DateFormat;
@@ -42,6 +43,8 @@ import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
 import skin.support.widget.SkinCompatTextHelper;
+import skin.support.widget.SkinCompatTextView;
+
 //个人github token: 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
 public class MainActivity extends SkinBaseActivity implements View.OnClickListener , CompoundButton.OnCheckedChangeListener,SkinCompatSupportable{
     public static final String TAG = "换肤";
