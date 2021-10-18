@@ -21,6 +21,8 @@ import skin.support.utils.SkinPreference;
 public class ThemeProvider extends ContentProvider {
     public static final String TAG = "换肤ThemeProvider";
     public static final String Uri = "com.sv.theme.ThemeProvider";
+
+    private static final String KEY = "skin";
     SharedPreferences skinPreference;
     private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int RESULT_CODE_QUERY = 0;  //查询返回码
@@ -39,17 +41,17 @@ public class ThemeProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        skinPreference = getContext().getSharedPreferences("skin", Context.MODE_PRIVATE);
+        skinPreference = getContext().getSharedPreferences(KEY, Context.MODE_PRIVATE);
         if(skinPreference == null) {
             Log.e(TAG,"skinPreference == null");
             return null;
         }
-        final String skinName = skinPreference.getString("skin","");
+        final String skinName = skinPreference.getString(KEY,"");
         if(skinName == null) {
             Log.e(TAG, "skinName == null");
             return null;
         }
-        MatrixCursor cursor = new MatrixCursor(new String[]{"skin"});   //参数类似于列名
+        MatrixCursor cursor = new MatrixCursor(new String[]{KEY});   //参数类似于列名
         cursor.addRow(new String[]{skinName});
         return (Cursor) cursor;
     }
@@ -71,13 +73,13 @@ public class ThemeProvider extends ContentProvider {
         return 0;
     }
 
-    //预留给其他可能要改变主题的模块
+    //用于更新主题，可用于其他模块
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        String skinName = contentValues.getAsString("skin");
-        skinPreference = getContext().getSharedPreferences("skin", Context.MODE_PRIVATE);
+        String skinName = contentValues.getAsString(KEY);
+        skinPreference = getContext().getSharedPreferences(KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = skinPreference.edit();
-        editor.putString("skin",skinName).commit();
+        editor.putString(KEY,skinName).commit();
         Log.i(TAG,"更新保存皮肤："+skinName);
         getContext().getContentResolver().notifyChange(uri,null);   //通知相关监听，内容改变
         return 0;

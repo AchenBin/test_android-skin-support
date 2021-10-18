@@ -26,8 +26,8 @@ public class SecActivity extends SkinBaseActivity {
 
 
     public void onClick(View view) {
-//        finish();
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+        finish();
+//        Intent intent = new Intent(this,MainActivity.class);
+//        startActivity(intent);
     }
 }

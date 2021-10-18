@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="right"
+    android:id="@+id/layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,21 +14,125 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="28sp"
-        android:textColor="@color/colorAccent"
         android:text="@string/title_main"
         />
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="100dp"
-        android:src="@mipmap/album"
+
+    <com.example.test_skin_support.activity.MyView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:firstColor="@color/colorAccent"
+        app:firstTextAppearance="@style/myTextStyle"
+        app:imgSrc="@mipmap/album"
+        app:firstTextSize="@dimen/text_size" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="27sp"
+        android:textColor="@color/colorAccent"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/album"
+            />
+
+    </LinearLayout>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/radio_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="默认主题"
+            android:textSize="26dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginRight="30dp"
+            />
+        <RadioButton
+            android:id="@+id/radio_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主题2"
+            android:textSize="26dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginRight="30dp"
+            />
+        <RadioButton
+            android:id="@+id/radio_change3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主题3"
+            android:textSize="26dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginRight="30dp"
+            />
+    </RadioGroup>
     <Button
         android:id="@+id/btn_change"
         android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="170dp"
         android:layout_height="@dimen/btn_height"
+        android:visibility="gone"
         android:text="切换主题"
         />
     <Button
@@ -34,7 +140,8 @@
         android:layout_marginTop="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="170dp"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/btn_height"
+        android:visibility="gone"
         android:text="默认主题"
         />
     <Button
@@ -44,5 +151,13 @@
         android:layout_width="170dp"
         android:layout_height="@dimen/btn_height"
         android:text="跳转"
+        />
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="170dp"
+        android:layout_height="@dimen/btn_height"
+        android:text="结束"
         />
 </LinearLayout>

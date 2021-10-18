@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyView">
+        <attr name="firstTextSize" format="dimension"/>
+        <attr name="firstColor" format="color"/>
+        <attr name="firstTextAppearance" format="reference"/>
+        <attr name="imgSrc" format="reference"/>
+    </declare-styleable>
+</resources>
