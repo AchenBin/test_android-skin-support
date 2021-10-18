@@ -218,6 +218,16 @@ public class MainActivity extends SkinBaseActivity implements View.OnClickListen
             radio_default.setChecked(true);
             isNeedListener = true;
             Log.e(TAG,"radio_default切换！！！");
+        }else if(radio_change != null && SkinPreference.getInstance().getSkinName().equals("overlay2.skin")){
+            isNeedListener = false;
+            radio_change.setChecked(true);
+            isNeedListener = true;
+            Log.e(TAG,"radio_default切换！！！");
+        }else if(radio_change3 != null && SkinPreference.getInstance().getSkinName().equals("overlay3.skin")){
+            isNeedListener = false;
+            radio_change3.setChecked(true);
+            isNeedListener = true;
+            Log.e(TAG,"radio_default切换！！！");
         }
     }
     private boolean isNeedListener = true;  //标记是否需要调用onCheckedChanged，用于其他模块改变主题后，radioButton响应

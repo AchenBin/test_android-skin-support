@@ -1,7 +1,6 @@
 # test_android-skin-support
 ### 最新在线文档请看
 https://note.youdao.com/ynoteshare/index.html?id=087b54287a6f2978c0763e32ce2546f3&type=note&_time=1632893660948
-
 # Android-skin-support使用及多模块切换方案
 **Github**:https://github.com/ximsfei/Android-skin-support
 
@@ -10,6 +9,8 @@ https://note.youdao.com/ynoteshare/index.html?id=087b54287a6f2978c0763e32ce2546f
 **AlertDialog 换肤支持**：https://github.com/ximsfei/Android-skin-support/blob/master/docs/AlertDialog.md
 
 若出现了`ClassNotFoundException: Didn't find class "androidx.legacy.widget.Space" `问题，请添加依赖：`implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'`
+
+**个人demo地址**：https://github.com/AchenBin/test_android-skin-support
 
 
 **目录：**
@@ -21,13 +22,18 @@ https://note.youdao.com/ynoteshare/index.html?id=087b54287a6f2978c0763e32ce2546f
 6. [自定义View使用注意](#6)
 7. [多模块主题切换方案](#7)
 8. [使用多渠道配置皮肤包](#8)
-9. [动态设置资源：参考github](https://github.com/ximsfei/Android-skin-support#%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90)
+9. [主题切换过程](#9)
+10. [自定义TextView实现在代码中设置可换肤的textColor、textSize、text](#10)
+19. [动态设置资源：参考github](https://github.com/ximsfei/Android-skin-support#%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE%E8%B5%84%E6%BA%90)
+
 
 
 
 **延伸的特别用法**：参考[获取当前主题包及其资源](#5)
 1. textColor代码设置方法
 2. 代码使用color、drawable而非官方指定的使用id
+
+&nbsp;&nbsp;&nbsp;==注：来自自定义view的实现流程，activity中可以模仿并用于非id设置，但不推荐（如imageView可能会有多种状态，那applySkin()中也要进行判断）。可以封装起来使用，如[10.自定义TextView](#10)==
 
 
 
@@ -79,12 +85,12 @@ public AppCompatDelegate getDelegate() {
 ```
 ## <div id="2">二、换肤方式</div>
 1. **应用内**（==不推荐使用，修改资源名过于繁琐==）
-2. **插件式(assets)**：缺点：不可热更新升级皮肤资源(并非完全不行，assets也是会被复制到路径：下再使用的)
+2. **插件式(assets)**：缺点：不可热更新升级皮肤资源(并非完全不行，assets也是会被复制到路径：android/包名/../..下再使用的)
 3. **自定义加载策略（SD卡、zip）**
 
 ==资源加载优先级: 动态设置资源-加载策略中的资源-插件式换肤/应用内换肤-应用资源。==
 
-==**注**：需要多个皮肤的情况下：可以只建一个皮肤module,不同的皮肤使用多渠道配置==
+**注**：需要多个皮肤的情况下：可以只建一个皮肤module,不同的皮肤使用多渠道配置
 
 #### 1.应用内：
 新建res-XXX目录，在gradle配置资源目录，每个id或名称都需重命名，如：btn_bg.xml、btn_bg_overlay.xml，R.string.text、R.string.text_overlay
@@ -190,7 +196,7 @@ SkinCompatManager.getInstance().loadSkin("night.skin", null, CustomSDCardLoader.
 
 
 ##  <div id="5">五、获取当前主题包及其资源</div>
-默认主题下拿到的是空值。
+默认主题下拿到的是空字符串。
 1. 获取当前皮肤名称：`SkinPreference.getInstance().getSkinName();`
 2. 获取当前皮肤包名：`SkinCompatResources.getInstance().getSkinPkgName()`
 
@@ -200,6 +206,7 @@ SkinCompatResources.getInstance().getSkinResources();   //resource
 SkinCompatResources.getColor(context,resId);    // 有不同get：color/drawable/value/xml等
 SkinCompatResources.getInstance().getColor(context,resId);   //同上
 ```
+若该皮肤包下没有对应资源，会使用默认资源。
 
 #### 特殊用法：
 ==**注1**：如果代码中是使用SkinCompatResources来给控件设置资源，当切主题时不会实时改变，当重启后会使用当前主题资源（可支持id、直接给资源如setBackground(Drawable)）==
@@ -226,6 +233,7 @@ SkinCompatResources.getInstance().getColor(context,resId);   //同上
 
     }
 ```
+==**注3**：封装使用：[10.自定义TextView](#10)==
 ## <div id="6">六、自定义View使用注意</div>
 #### 官方例子：
 
@@ -259,21 +267,9 @@ eg: [SkinCompatAutoCompleteTextView](https://github.com/ximsfei/Android-skin-sup
 
 eg: [SkinCompatCircleImageView](https://github.com/ximsfei/Android-skin-support/blob/master/third-part-support/circleimageview/src/main/java/skin/support/circleimageview/widget/SkinCompatCircleImageView.java)
 
-#### 其余可能需要说明的点
-//如果自定义view中需要有代码setTextColor等需求，同样可以使用[获取当前主题包及其资源](#5)小节的方式
-```java
-    int id = typedArray.getResourceId(R.styleable.MyView_firstColor,0);
-    int color = SkinCompatResources.getColor(context,id);
-    tv.setTextColor(color);
+#### 自定义实现一些功能：textColor、textSize、text
+//基础控件参考[第10小节](#10)的方式。非基础控件请查看官方示例。
 
-     @Override
-    public void applySkin() {
-        if(tv != null){
-           color = SkinCompatResources.getColor(context,id);
-           tv.setTextColor(color);
-        }
-    }
-```
 
 
 
@@ -282,7 +278,6 @@ eg: [SkinCompatCircleImageView](https://github.com/ximsfei/Android-skin-support/
 
 ==为避免每个module都需要复制一遍Application、BaseActivity，以及后期修改的困难，抽离到一个公共的Library供其他模块引用。只需要继承这两个类即可。（到时看项目具体配置，后续更新）==
 
-==**当前缺陷**：启动加载资源较多时，可能会先看到原皮肤，然后再切换==
 
 #### provider
 ```java
@@ -422,7 +417,23 @@ public class App extends Application {
 }
 
 ```
+
+
+#### Library模块依赖导入变化
+使用api导入依赖，这样其他应用引用该library后就无需重复导入依赖
+```java
+    //api和implementation两种依赖的不同点在于：它们声明的依赖其他模块是否能使用。
+    api 'skin.support:skin-support:4.0.5'                   // skin-support
+    api 'skin.support:skin-support-appcompat:4.0.5'         // skin-support 基础控件支持
+    api 'skin.support:skin-support-design:4.0.5'            // skin-support-design material design 控件支持[可选]
+    api 'skin.support:skin-support-cardview:4.0.5'          // skin-support-cardview CardView 控件支持[可选]
+    api 'skin.support:skin-support-constraint-layout:4.0.5' // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+```
+
+
+
 #### SettingActivity改变主题（2种方式）
+==**注**：若要让settingActivity最快切换，可以先调用应用主题再在成功回调中通知provider改变==
 ##### 1. 操纵sharedPreferences并通知provider变化
 若provider在setting模块中：
 可以用这种，也可以用下种方式：
@@ -508,4 +519,89 @@ android{
             outputFileName = productFlavors[0].name+".skin"
         }
  }
+```
+
+
+
+## <div id="9">九、主题切换过程</div>
+1. 手动调用loadSkin加载皮肤
+2. 每个loadSkin启动新AsyncTask，使用线程池
+3. doInBackground中获取皮肤资源
+4. onPostExecute中为activity加载皮肤（只加载最后resume的activity,其余activity等待resume再加载）
+
+#### 原理
+拦截view创建过程，替换原生view为自定义View，加载主题包Resource
+
+
+## <div id="10">十、自定义TextView实现在代码中设置可换肤的textColor、textSize、text<div>
+==注：若无相关SkinCompat的View可以继承，就继承普通view，然后仿造SkinCompat的view去实现==
+
+==**注2**：textSize、text使用xml原生设置无法实现“换肤效果”，可以尝试自定义的attr（我没成功）==
+
+步骤 ：
+1. 自定义MyTextView继承SkinCompatTextView
+2. 定义setTextColorResource()方法
+3. 实现SkinCompatSupportable接口applySkin()方法，内部执行setTextColorResource()
+
+例：
+```java
+public class MyTextView extends SkinCompatTextView implements SkinCompatSupportable {
+    private int colorId = SkinCompatHelper.INVALID_ID;
+    private int textSizeId = SkinCompatHelper.INVALID_ID;
+    private int textId = SkinCompatHelper.INVALID_ID;
+
+    public MyTextView(Context context) {
+        super(context);
+    }
+    public MyTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+    public MyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    //设置可换肤字体颜色，xml依旧使用原生android:textColor即可
+    public void setTextColorResource(@ColorRes int colorId) {
+        this.colorId = colorId;
+        colorId = SkinCompatHelper.checkResourceId(colorId);    //验证id是否合法，不合法返回INVALID_ID
+        if(colorId != SkinCompatHelper.INVALID_ID){
+            setTextColor(SkinCompatResources.getColor(getContext(),colorId));
+        }
+    }
+    //设置可换肤字体大小，暂时无法使用xml设置
+    public void setTextSizeResource(@DimenRes int sizeId) {
+        this.textSizeId = sizeId;
+        sizeId = SkinCompatHelper.checkResourceId(sizeId);
+        if(sizeId != SkinCompatHelper.INVALID_ID){
+            setTextSize(SkinCompatResources.getInstance().getSkinResources().getDimension(sizeId));
+        }
+    }
+    //设置可换肤文本，暂时无法使用xml设置
+    public void setTextResource(@StringRes int textId) {
+        this.textId = textId;
+        textId = SkinCompatHelper.checkResourceId(textId);
+        if(textId != SkinCompatHelper.INVALID_ID){
+            setText(SkinCompatResources.getInstance().getSkinResources().getString(textId));
+        }
+    }
+
+    @Override
+    public void applySkin() {
+        super.applySkin();
+        setTextColorResource(colorId);
+        setTextSizeResource(textSizeId);
+        setTextResource(textId);
+    }
+}
+
+```
+使用：（直接调用setTextColorResource()，即可实现:代码设置可换肤的textColor）
+textColor在xml中无区别，其他不能使用xml设置
+```
+private void init(){
+    MyTextView my_text = findViewById(R.id.my_text);
+    my_text.setTextColorResource(R.color.text_color_tip);
+    my_text.setTextSizeResource(R.dimen.btn_height);
+    my_text.setTextResource(R.string.app_name);
+}
 ```

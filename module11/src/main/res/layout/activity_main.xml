@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#c3a3c3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,17 +12,39 @@
         android:text="关闭"
         android:onClick="onFinish"
         />
-    <Button
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="切换主题"
-        android:onClick="onChange"
-        />
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="默认主题"
+            android:onClick="onChange"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:text="主题二"
+            android:onClick="onChange2"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:text="主题三"
+            android:onClick="onChange3"
+            />
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="普通textView"
         android:textColor="@color/colorAccent"
         android:textSize="38dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +55,7 @@
         android:id="@+id/my_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:textSize="@dimen/btn_height"
+        android:textSize="110sp"
         android:text="自定义TextView"/>
     <LinearLayout
         android:layout_width="match_parent"

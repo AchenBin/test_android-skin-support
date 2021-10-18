@@ -29,8 +29,8 @@ import static skin.support.SkinCompatManager.SKIN_LOADER_STRATEGY_NONE;
 
 public class SkinApp extends Application {
     public static final String TAG = "换肤App";
-    public static final int SKIN_LOADER_STRATEGY = CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD;  //加载策略，自定义sd
-//    public static final int SKIN_LOADER_STRATEGY = SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS;  //加载策略，assets
+//    public static final int SKIN_LOADER_STRATEGY = CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD;  //加载策略，自定义sd
+    public static final int SKIN_LOADER_STRATEGY = SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS;  //加载策略，assets
 
     private volatile List<Activity> activityList = new ArrayList<>();
     public volatile boolean needUpdateOnResume = false; //标记是否module处于前台时再加载资源，但测试显示，加载速度不够快，会闪现切换
@@ -58,7 +58,7 @@ public class SkinApp extends Application {
         needUpdateOnResume = false;
 
         SkinCompatManager.withoutActivity(this)
-                .addStrategy(new CustomSDCardLoader())
+//                .addStrategy(new CustomSDCardLoader())
                 .addInflater(new SkinAppCompatViewInflater())           // 基础控件换肤初始化
                 .addInflater(new SkinMaterialViewInflater())            // material design 控件换肤初始化[可选]
                 .addInflater(new SkinConstraintViewInflater())          // ConstraintLayout 控件换肤初始化[可选]

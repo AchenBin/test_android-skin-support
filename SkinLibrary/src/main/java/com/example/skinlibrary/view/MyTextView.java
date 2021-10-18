@@ -34,14 +34,11 @@ public class MyTextView extends SkinCompatTextView implements SkinCompatSupporta
 //        mTextHelper = SkinCompatTextHelper.create(this);
 //        mTextHelper.loadFromAttributes(attrs,defStyleAttr);
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyTextView, defStyleAttr, 0);
-        textSizeId = typedArray.getResourceId(R.styleable.MyTextView_textSize,0);
-        setTextSizeResource(textSizeId);
 //        colorId = typedArray.getResourceId(R.styleable.SkinTextAppearance_android_textColor,SkinCompatHelper.INVALID_ID);
 //        setTextColor(getResources().getColor(colorId,null));
     }
 
-    //设置可换肤字体颜色
+    //设置可换肤字体颜色，xml依旧使用原生android:textColor即可
     public void setTextColorResource(@ColorRes int colorId) {
         this.colorId = colorId;
         colorId = SkinCompatHelper.checkResourceId(colorId);    //验证id是否合法，不合法返回INVALID_ID
@@ -52,7 +49,6 @@ public class MyTextView extends SkinCompatTextView implements SkinCompatSupporta
     //设置可换肤字体大小，暂时无法使用xml设置
     public void setTextSizeResource(@DimenRes int sizeId) {
         this.textSizeId = sizeId;
-        sizeId = SkinCompatResources.getInstance().getTargetResId(getContext(),sizeId);
         sizeId = SkinCompatHelper.checkResourceId(sizeId);
         if(sizeId != SkinCompatHelper.INVALID_ID){
             setTextSize(SkinCompatResources.getInstance().getSkinResources().getDimension(sizeId));
