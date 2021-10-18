@@ -33,7 +33,7 @@ public class SkinApp extends Application {
 //    public static final int SKIN_LOADER_STRATEGY = SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS;  //加载策略，assets
 
     private volatile List<Activity> activityList = new ArrayList<>();
-    public volatile boolean needUpdateOnResume = false;
+    public volatile boolean needUpdateOnResume = false; //标记是否module处于前台时再加载资源，但测试显示，加载速度不够快，会闪现切换
 
     public synchronized void addActivity(Activity activity){
         if(!activityList.contains(activity)){

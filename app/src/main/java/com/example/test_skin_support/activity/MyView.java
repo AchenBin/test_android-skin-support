@@ -72,7 +72,7 @@ public class MyView extends LinearLayout implements SkinCompatSupportable {
         id = typedArray.getResourceId(R.styleable.MyView_firstColor,SkinCompatHelper.INVALID_ID);
         color = SkinCompatResources.getColor(context,id);
         tv.setTextColor(color);
-
+        //设置style来改变字体设置
 //        id = typedArray.getResourceId(R.styleable.MyView_firstTextAppearance,0);
 //        tv.setTextAppearance(
 //                typedArray.getResourceId(R.styleable.MyView_firstTextAppearance,0)

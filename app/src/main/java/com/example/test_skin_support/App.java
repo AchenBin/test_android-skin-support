@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.multidex.MultiDex;
 
 import com.example.skinlibrary.SkinApp;
 
@@ -82,9 +81,5 @@ public class App extends SkinApp {
 //    }
 
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
+
 }

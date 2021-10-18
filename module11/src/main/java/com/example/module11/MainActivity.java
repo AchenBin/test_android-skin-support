@@ -18,6 +18,8 @@ public class MainActivity extends SkinBaseActivity {
         MyTextView my_text = findViewById(R.id.my_text);
         my_text.setTextColorResource(R.color.text_color_tip);
 //        my_text.setBackgroundResource(R.color.colorPrimaryDark);
+//        my_text.setTextSizeResource(R.dimen.btn_height);
+//        my_text.setTextResource(R.string.app_name);
     }
 
 
