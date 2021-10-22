@@ -48,6 +48,9 @@ public class MyTextView extends SkinCompatTextView implements SkinCompatSupporta
     }
     //设置可换肤字体大小，暂时无法使用xml设置
     public void setTextSizeResource(@DimenRes int sizeId) {
+        if(SkinCompatResources.getInstance().getSkinResources() == null){
+            return;
+        }
         this.textSizeId = sizeId;
         sizeId = SkinCompatHelper.checkResourceId(sizeId);
         if(sizeId != SkinCompatHelper.INVALID_ID){
@@ -56,6 +59,9 @@ public class MyTextView extends SkinCompatTextView implements SkinCompatSupporta
     }
     //设置可换肤文本，暂时无法使用xml设置
     public void setTextResource(@StringRes int textId) {
+        if(SkinCompatResources.getInstance().getSkinResources() == null){
+            return;
+        }
         this.textId = textId;
         textId = SkinCompatHelper.checkResourceId(textId);
         if(textId != SkinCompatHelper.INVALID_ID){

@@ -1,10 +1,6 @@
 include ':SkinLibrary'
 include ':module22'
-include ':module11_overlay2'
 include ':module11'
 include ':app_overlay'
 include ':app'
 rootProject.name = "test_skin-support"
-
-//每个模块都引用Lib
-//project(':SkinLibrary').projectDir(settingsDir,'../SkinLibrary')

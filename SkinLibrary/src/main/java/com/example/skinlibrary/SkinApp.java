@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -32,22 +34,22 @@ public class SkinApp extends Application {
 //    public static final int SKIN_LOADER_STRATEGY = CustomSDCardLoader.SKIN_LOADER_STRATEGY_SDCARD;  //加载策略，自定义sd
     public static final int SKIN_LOADER_STRATEGY = SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS;  //加载策略，assets
 
-    private volatile List<Activity> activityList = new ArrayList<>();
-    public volatile boolean needUpdateOnResume = false; //标记是否module处于前台时再加载资源，但测试显示，加载速度不够快，会闪现切换
-
-    public synchronized void addActivity(Activity activity){
-        if(!activityList.contains(activity)){
-            activityList.add(activity);
-            Log.i(TAG,getPackageName()+"：addActivity后，数量"+activityList.size());
-        }
-    }
-
-    public synchronized void removeActivity(Activity activity){
-        if(activityList.contains(activity)){
-            activityList.remove(activity);
-            Log.i(TAG,getPackageName()+"：removeActivity后，数量"+activityList.size());
-        }
-    }
+//    private volatile List<Activity> activityList = new ArrayList<>();
+//    public volatile boolean needUpdateOnResume = false; //标记是否module处于前台时再加载资源，但测试显示，加载速度不够快，会闪现切换
+//
+//    public synchronized void addActivity(Activity activity){
+//        if(!activityList.contains(activity)){
+//            activityList.add(activity);
+//            Log.i(TAG,getPackageName()+"：addActivity后，数量"+activityList.size());
+//        }
+//    }
+//
+//    public synchronized void removeActivity(Activity activity){
+//        if(activityList.contains(activity)){
+//            activityList.remove(activity);
+//            Log.i(TAG,getPackageName()+"：removeActivity后，数量"+activityList.size());
+//        }
+//    }
 
     Uri uri;
     @Override
@@ -55,7 +57,7 @@ public class SkinApp extends Application {
         Log.e(TAG,getPackageName()+"onCreate");
         super.onCreate();
 
-        needUpdateOnResume = false;
+//        needUpdateOnResume = false;
 
         SkinCompatManager.withoutActivity(this)
 //                .addStrategy(new CustomSDCardLoader())
@@ -70,16 +72,27 @@ public class SkinApp extends Application {
         //无关
 //        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);    //Android5.0以下矢量图片兼容
 
-        uri = Uri.parse("content://com.sv.theme.ThemeProvider");
+//        uri = Uri.parse("content://com.sv.theme.ThemeProvider");
         //启动先查询是否要更换
-        changeSkin(uri);
+//        changeSkin(uri);
         //监听变化
-        getContentResolver().registerContentObserver(uri, true, new ContentObserver(new Handler()) {
+//        getContentResolver().registerContentObserver(uri, true, new ContentObserver(new Handler()) {
+//            @Override
+//            public void onChange(boolean selfChange) {
+//                Log.i(TAG,getPackageName()+"收到provider变化");
+//                super.onChange(selfChange);
+//                changeSkin(uri);
+//            }
+//        });
+
+        changeSkinByName(Settings.System.getString(getContentResolver(),"com.sv.skin"));
+        getContentResolver().registerContentObserver(Settings.System.getUriFor("com.sv.skin"), true, new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
                 Log.i(TAG,getPackageName()+"收到provider变化");
                 super.onChange(selfChange);
-                changeSkin(uri);
+                String skin = Settings.System.getString(getContentResolver(),"com.sv.skin");
+                changeSkinByName(skin);
             }
         });
     }
@@ -105,7 +118,11 @@ public class SkinApp extends Application {
      * @param skinName
      */
     private void changeSkinByName(String skinName){
-        needUpdateOnResume = false;
+        if(skinName == null){
+            Log.e(TAG,"Settings还没初始化！！！");
+            return ;
+        }
+//        needUpdateOnResume = false;
         Log.i(TAG,getPackageName()+"准备切换默认主题："+skinName);
         if(skinName.equals("")){
             SkinCompatManager.getInstance().restoreDefaultTheme();
@@ -114,19 +131,19 @@ public class SkinApp extends Application {
         }
     }
 
-    /**
-     * 先保存并设置需要切换flag，等待该模块的activity,OnResume时再切换
-     * @param skinName
-     */
-    private void delayChangeSkinByName(String skinName){
-        needUpdateOnResume = true;
-        Log.i(TAG,getPackageName()+"不在前台，等待resume再切换："+skinName);
-        if(skinName.equals("")){
-            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY_NONE).commitEditor();
-        }else{
-            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY).commitEditor();
-        }
-    }
+//    /**
+//     * 先保存并设置需要切换flag，等待该模块的activity,OnResume时再切换
+//     * @param skinName
+//     */
+//    private void delayChangeSkinByName(String skinName){
+////        needUpdateOnResume = true;
+//        Log.i(TAG,getPackageName()+"不在前台，等待resume再切换："+skinName);
+//        if(skinName.equals("")){
+//            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY_NONE).commitEditor();
+//        }else{
+//            SkinPreference.getInstance().setSkinName(skinName).setSkinStrategy(SKIN_LOADER_STRATEGY).commitEditor();
+//        }
+//    }
 
     //很大可能不会调用的
     @Override
